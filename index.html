@@ -1,14 +1,17 @@
 <html>
-<script src='https://npmcdn.com/@reactivex/rxjs@5.0.0-beta.6/dist/global/Rx.umd.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/rxjs/6.3.2/rxjs.umd.js'></script>
+
+<!--'https://npmcdn.com/@reactivex/rxjs@6.0.0-beta.6/dist/global/Rx.umd.js'-->
 
 <body>
 <button id='test'>Click Me!</button>
 </body>
 <script>
 (() => {
-const button = document.getElementById('test');  
-Rx.Observable.fromEvent(button, 'click')
-  .subscribe(() => {console.log('Clicked!')});
+const button = document.getElementById('test');
+console.log(rxjs);  
+rxjs.fromEvent(button, 'click').pipe(rxjs.operators.scan(count => count+1,0))
+  .subscribe((count) => {console.log(`Clicked! ${count}`)});
 })();
 </script>
 </html>
