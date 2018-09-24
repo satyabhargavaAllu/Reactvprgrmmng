@@ -1,0 +1,14 @@
+<html>
+<script src='https://npmcdn.com/@reactivex/rxjs@5.0.0-beta.6/dist/global/Rx.umd.js'></script>
+
+<body>
+<button id='test'>Click Me!</button>
+</body>
+<script>
+(() => {
+const button = document.getElementById('test');  
+Rx.Observable.fromEvent(button, 'click')
+  .subscribe(() => {console.log('Clicked!')});
+})();
+</script>
+</html>

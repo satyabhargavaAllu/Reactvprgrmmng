@@ -1,0 +1,22 @@
+{
+  "name": "reactivexprg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/satyabhargavaAllu/Reactvprgrmmng.git"
+  },
+  "author": "satyabhargava Allu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/satyabhargavaAllu/Reactvprgrmmng/issues"
+  },
+  "homepage": "https://github.com/satyabhargavaAllu/Reactvprgrmmng#readme",
+  "dependencies": {
+    "rxjs": "^6.3.2"
+  }
+}
