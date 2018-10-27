@@ -8,10 +8,94 @@
 </body>
 <script>
 (() => {
+//////////////////// button events to observables///////////////////////////////
 const button = document.getElementById('test');
 console.log(rxjs);  
 rxjs.fromEvent(button, 'click').pipe(rxjs.operators.scan(count => count+1,0))
   .subscribe((count) => {console.log(`Clicked! ${count}`)});
+
+  
+/////////////////////operators(map,merge,interval)////////////////////////////////////////////////
+const a = rxjs.range(1,5).pipe(rxjs.operators.map(i => i));
+const b = rxjs.range(1,8).pipe(rxjs.operators.map(i => i));
+
+//rxjs.merge(a, b).subscribe(i => console.log(i))
+
+///////////////////////map,filter,reduce//////////////////////////////////////////////
+function logValue(val){
+console.log(val);
+}
+
+function isEven(val){
+return val % 2 === 0;
+}
+
+
+const maaap = rxjs.range(1,5).pipe(rxjs.operators.map(i => i*2));
+//maaap.subscribe(logValue);
+
+
+const fltr = rxjs.range(1,5).pipe(rxjs.operators.filter(isEven));
+//fltr.subscribe(logValue);
+
+const rduce = rxjs.range(1,5).pipe(rxjs.operators.reduce((acc, x) => acc + x));
+//rduce.subscribe(logValue);
+
+/////////////////////////////////////////////////////////////////////////////////
+/*************
+We basically want to log the average of an infinite sequence at any given point. The problem is that if the sequence never ends, an aggregate operator like reduce will never call its Subscribers’ next operator.
+**************/
+
+let average123 =rxjs.range(1,5).pipe(rxjs.operators.scan((previous,current)=>{
+return {
+sum: previous.sum + current,
+count: previous.count + 1
+};
+},
+{ sum: 0, count: 0 }
+)).pipe(rxjs.operators.map(result => (result.sum/result.count)));
+//average123.subscribe(logValue);
+
+/**********************
+The flatMap operator takes an Observable A whose elements are also Observables, and returns an Observable with the flattened values of A’s child Observables
+*/
+const values$ = rxjs.from([
+rxjs.from([1, 2, [9,10,11,[14,15,16]]]),
+rxjs.of(4,5,6),
+rxjs.of(7,8,9)
+]);
+
+//values$ is an Observable that emits three Observables
+//values$.pipe(rxjs.operators.flatMap(v => v)).subscribe(v => console.log(v));
+//values$.pipe(rxjs.operators.concatAll(v => v)).subscribe(v => console.log(v));
+
+/*****handling error
+*******/
+function getJSON(arr){
+return rxjs.from(arr).pipe(rxjs.operators.map(JSON.parse),(rxjs.operators.catchError(
+rxjs.of({
+error:"There was an error parsing JSON"
+})
+)));
+}
+
+const caught$ = getJSON(['{"1": 1, "2": 2}','{"1: 1}']);
+caught$.subscribe(
+json => console.log("Parsed JSON: ", json),
+err => console.log(err)
+);
+
+/*****retry mechanism  There are two important things to know when using retry. First, if we don’t pass any parameters, it will retry indefinitely until the sequence is finished with no errors. This is dangerous for performance if the Observable keeps producing errors. If we’re using synchronous Observables, it would have the same effect as an infinite loop.
+
+Second, retry will always retry the whole Observable sequence again, even if some of the items didn’t error. This is important in case you’re causing any side effects when processing items, since they will be reapplied with every retry.
+*******/
+rxjs.ajax(​"/products"​)
+.retry(5)
+.subscribe(
+xhr => console.log(xhr),
+err => console.error(​"ERROR: "​, err)
+);
+////////////////////////////////////////////////////////////////////////
 })();
 </script>
 </html>
